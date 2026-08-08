@@ -101,7 +101,7 @@ LqrGain solveLQR(const Eigen::MatrixXd& A,
     // 取前 n 个特征向量（属于稳定子空间）
     Eigen::MatrixXcd U11(n, n);
     Eigen::MatrixXcd U21(n, n);
-
+ 
     for (int k = 0; k < n; ++k) {
         int col = order[k];
         for (int i = 0; i < n; ++i) {
