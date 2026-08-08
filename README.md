@@ -17,13 +17,13 @@ $$
 \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}
 =
 \begin{bmatrix}
-0 & 1 \\[4pt]
+0 & 1 \\
 \frac{(M+m)g}{Ml} & -d
 \end{bmatrix}
 \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}
 +
 \begin{bmatrix}
-0 \\[4pt]
+0 \\
 -\frac{1}{Ml}
 \end{bmatrix}
 u
@@ -124,7 +124,15 @@ $$
 | `lqr_matlab_interface.m` | MATLAB 侧的封装函数，对 `lqr_mex` 做参数校验和错误提示。 |
 | `run_lqr_sim.m` | MATLAB 一键运行脚本：自动编译 MEX → 求解 LQR → 跑闭环仿真 → 绘制状态/控制曲线。 |
 
-**关键区别**：`LQR_Origin/` 求解的是 **离散时间** 代数 Riccati 方程 (DARE: $P = Q + A^T P A - A^T P B (R + B^T P B)^{-1} B^T P A$)，使用**迭代法**；而 `LQR_test/` 求解的是 **连续时间** 代数 Riccati 方程 (CARE)，使用** Hamiltonian + Schur 分解法**。
+**关键区别**：`LQR_Origin/` 求解的是 **离散时间** 代数 Riccati 方程 (DARE)，使用**迭代法**；而 `LQR_test/` 求解的是 **连续时间** 代数 Riccati 方程 (CARE)，使用 **Hamiltonian + Schur 分解法**。
+
+$$
+\text{DARE:}\quad P = Q + A^T P A - A^T P B\,(R + B^T P B)^{-1}\,B^T P A
+$$
+
+$$
+\text{CARE:}\quad A^T P + P A - P B R^{-1} B^T P + Q = 0
+$$
 
 ### `LQR_test/` — 连续时间倒立摆 LQR 控制器（主项目）
 
@@ -247,9 +255,9 @@ interactive_pendulum
 
 | 操作 | 按钮 | 快捷键 |
 |------|------|--------|
-| 推摆杆 (角速度脉冲) | 👆 推摆杆 | `P` |
-| 推小车 (力脉冲, 持续 100ms) | 🚗 推小车 | `C` |
-| 重置 | 🔄 重置 | `R` |
+| 推摆杆 (角速度脉冲) | 推摆杆 | `P` |
+| 推小车 (力脉冲, 持续 100ms) | 推小车 | `C` |
+| 重置 | 重置 | `R` |
 | 暂停/继续 | 暂停 | `空格` |
 | 调扰动强度 | 滑块 | `↑` `↓` |
 
@@ -258,7 +266,7 @@ interactive_pendulum
 - 摆杆颜色: 竖直(白) → 倾斜(黄) → 大偏角(红)
 - 控制力数字: 小力(绿) → 中力(橙) → 大力(红)
 - 橙色 ▽ = 推摆杆时刻，绿色 △ = 推小车时刻
-- ⚡ 闪效 = 扰动触发
+- 闪效 = 扰动触发
 
 ---
 
@@ -286,7 +294,10 @@ interactive_pendulum
 采用 **Riccati 迭代法**（`LQR_Origin/` 中各文件）：
 
 1. 初始化 $P_0 = Q$
-2. 迭代 $P_{k+1} = Q + A^T P_k A - A^T P_k B (R + B^T P_k B)^{-1} B^T P_k A$
+2. 迭代：
+   $$
+   P_{k+1} = Q + A^T P_k A - A^T P_k B\,(R + B^T P_k B)^{-1}\,B^T P_k A
+   $$
 3. 收敛判据：$\|P_{k+1} - P_k\|_\infty < 10^{-10}$
 4. 增益: $K = (R + B^T P B)^{-1} B^T P A$
 
